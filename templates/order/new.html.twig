@@ -1,11 +1,26 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New Order{% endblock %}
+{% block title %}Create New Order{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('ordersform') }}
+{% endblock %}
 
 {% block body %}
-    <h1>Create new Order</h1>
+<div class="order-form-container">
+    <h1>Create New Order</h1>
 
     {{ include('order/_form.html.twig') }}
 
-    <a href="{{ path('app_order_index') }}">back to list</a>
+    <div class="form-actions">
+        <button type="submit" form="order_form" class="btn btn-primary">💾 Save Order</button>
+        <a href="{{ path('app_order_index') }}" class="btn btn-secondary">↩ Back to List</a>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('ordersform') }}
 {% endblock %}

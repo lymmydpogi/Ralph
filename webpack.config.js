@@ -16,11 +16,16 @@ Encore
      * Page-specific CSS is imported inside its JS file.
      */
     .addEntry('app', './assets/app.js')
-    .addEntry('dashboard', './assets/scripts/dashboard.js')  // Imports dashboard.css inside
-    .addEntry('orderindex', './assets/scripts/orderindex.js') // Imports orderindex.css inside
-    .addEntry('usersindex', './assets/scripts/usersindex.js') // Imports usersindex.css inside
-    .addEntry('orderedit', './assets/scripts/orderedit.js')   // Imports orderedit.css inside
+    .addEntry('dashboard', './assets/scripts/dashboard.js')     // Imports dashboard.css inside
+    .addEntry('orderindex', './assets/scripts/orderindex.js')   // Imports orderindex.css inside
+    .addEntry('usersindex', './assets/scripts/usersindex.js')   // Imports usersindex.css inside
+    .addEntry('orderedit', './assets/scripts/orderedit.js')     // Imports orderedit.css inside
     .addEntry('serviceindex', './assets/scripts/serviceindex.js') // Imports serviceindex.css inside
+    .addEntry('servicenew', './assets/scripts/servicenew.js') // Imports servicenew.css inside
+
+
+    // ✅ New entry for New Order page
+    .addEntry('ordersform', './assets/scripts/ordernew.js')   // Imports ordersform.css inside
 
     // Page-independent CSS
     .addStyleEntry('form', './assets/styles/form.css')
