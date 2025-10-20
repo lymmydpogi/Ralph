@@ -1,0 +1,64 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Orders{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Include compiled CSS via Webpack Encore #}
+    {{ encore_entry_link_tags('orderindex') }}
+{% endblock %}
+
+{% block content %}
+<h2>Orders</h2>
+
+<table id="ordersTable" class="display">
+    <thead>
+        <tr>
+            <th>Order ID</th>
+            <th>Customer</th>
+            <th>Service</th>
+            <th>Price</th>
+            <th>Created At</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for order in orders %}
+        <tr>
+            <td>{{ order.id }}</td>
+            <td>{{ order.customerName }}</td>
+            <td>{{ order.service ? order.service.name : 'N/A' }}</td>
+            <td>{{ order.service ? '$' ~ order.service.price : 'N/A' }}</td>
+            <td>{{ order.createdAt ? order.createdAt|date('Y-m-d H:i') : '' }}</td>
+            <td>
+                <a href="{{ path('app_order_view', {id: order.id}) }}" class="btn btn-view">View</a>
+                <a href="{{ path('app_order_edit', {id: order.id}) }}" class="btn btn-edit">Edit</a>
+                <form action="{{ path('app_order_delete', {id: order.id}) }}" method="POST" class="inline-form">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ order.id) }}">
+                    <button type="submit" class="btn btn-delete">Delete</button>
+                </form>
+            </td>
+        </tr>
+    {% else %}
+        <tr>
+            <td colspan="6" style="text-align:center;">No orders found</td>
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+
+<div class="actions-bottom">
+    <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-secondary">
+        &larr; Back
+    </a>
+    <a href="{{ path('app_order_new') }}" class="btn btn-primary">
+        + Add New Order
+    </a>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Include compiled JS via Webpack Encore #}
+    {{ encore_entry_script_tags('orderindex') }}
+{% endblock %}

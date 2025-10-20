@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Customers{% endblock %}
+{% block title %}Customer Management{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -12,7 +12,7 @@
 <h2>Customers</h2>
 
 <div class="actions">
-    <a href="{{ path('user_new') }}" class="btn btn-primary">+ Add New Customer</a>
+    <a href="{{ path('user_new') }}" class="btn btn-primary">+ Add Customer</a>
 </div>
 
 <table id="customersTable" class="display">
@@ -36,16 +36,16 @@
                         <td>{{ user.name }}</td>
                         <td>
                             {% for role in user.roles %}
-                                <span class="badge bg-secondary">{{ role|replace({'ROLE_':''})|capitalize }}</span>
+                                <span class="badge">{{ role|replace({'ROLE_':''})|capitalize }}</span>
                             {% endfor %}
                         </td>
                         <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i') : '—' }}</td>
                         <td>
-                            <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-view">View</a>
-                            <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-edit">Edit</a>
-                            <form action="{{ path('user_delete', {id: user.id}) }}" method="POST" class="inline-form" onsubmit="return confirm('Are you sure?');">
+                            <a href="{{ path('user_show', {'id': user.id}) }}" class="btn btn-sm btn-info">View</a>
+                            <a href="{{ path('user_edit', {'id': user.id}) }}" class="btn btn-sm btn-warning">Edit</a>
+                            <form method="post" action="{{ path('user_delete', {'id': user.id}) }}" class="inline-form" onsubmit="return confirm('Are you sure?');">
                                 <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                                <button type="submit" class="btn btn-delete">Delete</button>
+                                <button type="submit" class="btn btn-sm btn-danger">Delete</button>
                             </form>
                         </td>
                     </tr>
@@ -53,7 +53,7 @@
             {% endfor %}
         {% else %}
             <tr>
-                <td colspan="6" style="text-align:center;">No customers found</td>
+                <td colspan="6" style="text-align:center;">No customers found.</td>
             </tr>
         {% endif %}
     </tbody>

@@ -1,10 +1,16 @@
+// Bootstrap (jQuery, Axios, Stimulus, etc.)
 import './bootstrap.js';
-/*
- * Welcome to your app's main JavaScript file!
- *
- * This file will be included onto the page via the importmap() Twig function,
- * which should already be in your base.html.twig.
- */
-import './styles/app.css';
 
-console.log('This log comes from assets/app.js - welcome to AssetMapper! 🎉');
+// Global CSS
+import './styles/app.css';
+import './styles/form.css';
+import './styles/view.css';
+
+// Page-specific CSS (if you want all styles in one JS)
+import './scripts/dashboard.js';      // dashboard page JS + imports dashboard.css
+import './scripts/orderindex.js';     // order index page JS + imports orderindex.css
+import './scripts/usersindex.js';     // users index page JS + imports usersindex.css
+import './scripts/orderedit.js';      // order edit page JS + imports orderedit.css
+import './scripts/serviceindex.js';   // service index page JS + imports serviceindex.css
+
+console.log('App JS loaded: all page scripts imported!');

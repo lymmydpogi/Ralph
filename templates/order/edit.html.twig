@@ -1,0 +1,29 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Order{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    {# Include compiled CSS via Webpack Encore for the Edit Order page #}
+    {{ encore_entry_link_tags('orderedit') }}
+{% endblock %}
+
+{% block body %}
+    <h1>Edit Order</h1>
+
+    {# Include the order form partial #}
+    {{ include('order/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <div class="actions">
+        <a href="{{ path('app_order_index') }}" class="btn btn-secondary">&larr; Back to list</a>
+    </div>
+
+    {# Include the delete form partial #}
+    {{ include('order/_delete_form.html.twig') }}
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {# Include compiled JS via Webpack Encore for the Edit Order page #}
+    {{ encore_entry_script_tags('orderedit') }}
+{% endblock %}

@@ -1,0 +1,19 @@
+{# templates/service/edit.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Service{% endblock %}
+
+{% block welcome_text %}
+<h1>Edit Service</h1>
+{% endblock %}
+
+{% block stylesheets %}
+<link rel="stylesheet" href="{{ asset('css/form.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="form-container">
+    {{ include('service/_form.html.twig', {'button_label': 'Update'}) }}
+
+</div>
+{% endblock %}

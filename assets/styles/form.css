@@ -1,0 +1,107 @@
+/* form.css */
+
+/* Container for the whole form */
+.form-container {
+    background: #fff;
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    max-width: 700px;
+    margin: 2rem auto;
+    font-family: 'Inter', sans-serif;
+}
+
+/* Form fields */
+.form-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.form-container label {
+    font-weight: 600;
+    margin-bottom: 0.3rem;
+    color: #2b2b2b;
+}
+
+.form-container input[type="text"],
+.form-container input[type="number"],
+.form-container select,
+.form-container textarea {
+    padding: 0.6rem 0.8rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+    transition: border 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-container input:focus,
+.form-container select:focus,
+.form-container textarea:focus {
+    outline: none;
+    border-color: #75544a;
+    box-shadow: 0 0 5px rgba(117, 84, 74, 0.3);
+}
+
+/* Buttons */
+.btn {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 8px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    cursor: pointer;
+    border: none;
+}
+
+.btn-primary {
+    background-color: #75544a;
+    color: #fff;
+}
+
+.btn-primary:hover {
+    background-color: #5e4039;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.btn-secondary:hover {
+    background-color: #5a6268;
+}
+
+.btn-delete {
+    background-color: #e74c3c;
+    color: #fff;
+}
+
+.btn-delete:hover {
+    background-color: #c0392b;
+}
+
+/* Form actions (back, delete, submit) */
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.5rem;
+    margin-top: 1.5rem;
+}
+
+/* Textarea auto-resize */
+textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+/* Error messages */
+.form-error {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: -0.5rem;
+}

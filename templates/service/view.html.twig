@@ -1,0 +1,35 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}View Service{% endblock %}
+
+{% block stylesheets %}
+    <link rel="stylesheet" href="{{ asset('css/view.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="view-container">
+    <h2>{{ service.name }}</h2>
+
+    <div class="view-field">
+        <span class="view-field-label">Description:</span>
+        <span class="view-field-value">{{ service.description }}</span>
+    </div>
+
+    <div class="view-field">
+        <span class="view-field-label">Price:</span>
+        <span class="view-field-value">${{ service.price }}</span>
+    </div>
+
+    <div class="view-field">
+        <span class="view-field-label">Category:</span>
+        <span class="view-field-value">{{ service.category }}</span>
+    </div>
+
+    <div class="view-field">
+        <span class="view-field-label">Active:</span>
+        <span class="view-field-value">{{ service.isActive ? 'Yes' : 'No' }}</span>
+    </div>
+
+    <a href="{{ path('app_service_index') }}" class="btn btn-back">Back to Services</a>
+</div>
+{% endblock %}
