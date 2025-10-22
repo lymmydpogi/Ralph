@@ -3,53 +3,70 @@
 {% block title %}Create New Order{% endblock %}
 
 {% block stylesheets %}
-    {{ parent() }}
-    {{ encore_entry_link_tags('ordersform') }}
+{{ parent() }}
+{{ encore_entry_link_tags('ordernew') }}
 {% endblock %}
 
 {% block content %}
+
 <section class="section">
     <h2>Create New Order</h2>
 
     {{ form_start(form, { attr: { id: 'order_form' } }) }}
         {{ form_errors(form) }}
+
         <div class="grid grid-2 gap-lg">
-            <div class="p-3 panel">
+            <!-- Customer Info -->
+            <div class="p-3 panel customer-panel">
                 <h3 class="mb-3">Customer</h3>
                 {{ form_row(form.customer) }}
             </div>
 
-            <div class="p-3 panel">
+            <!-- Order Details -->
+            <div class="p-3 panel order-details-panel">
                 <h3 class="mb-3">Order Details</h3>
                 {{ form_row(form.orderDate) }}
 
                 <hr class="mb-3 mt-3" />
                 <h4 class="mb-2">Items</h4>
                 {{ form_errors(form.orderItems) }}
+
                 <table class="table table-striped table-hover table-bordered" style="width:100%">
                     <thead>
                         <tr>
                             <th>Product</th>
+                            <th>Product Qty</th>
                             <th>Service</th>
+                            <th>Service Qty</th>
+                            <th>Subtotal</th>
+                            <th>Actions</th>
                         </tr>
                     </thead>
                     <tbody id="order-items-body"
-                           data-prototype="{{ form_row(form.orderItems.vars.prototype)|e('html_attr') }}"
+                           data-prototype="{{ form_widget(form.orderItems.vars.prototype)|e('html_attr') }}"
                            data-index="{{ form.orderItems|length }}">
                         {% for itemForm in form.orderItems %}
                             <tr class="order-item-row">
                                 <td>{{ form_widget(itemForm.product) }}</td>
+                                <td>
+                                    <select class="form-select qty-dropdown" name="{{ itemForm.productQuantity.vars.full_name }}">
+                                        {% for i in 1..10 %}
+                                            <option value="{{ i }}" {% if itemForm.productQuantity.vars.value == i %}selected{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
                                 <td>{{ form_widget(itemForm.service) }}</td>
-                                {# Show row-level errors if any #}
-                                {% if form_errors(itemForm) %}
-                                    <td colspan="2">
-                                        <div class="text-danger" style="font-size:12px;">{{ form_errors(itemForm) }}</div>
-                                    </td>
-                                {% endif %}
-                                {# Hidden fields to carry data if needed #}
-                                <td style="display:none;">{{ form_widget(itemForm.name) }}</td>
-                                <td style="display:none;">{{ form_widget(itemForm.price) }}</td>
-                                <td style="display:none;">{{ form_widget(itemForm.quantity) }}</td>
+                                <td>
+                                    <select class="form-select qty-dropdown" name="{{ itemForm.serviceQuantity.vars.full_name }}">
+                                        {% for i in 1..10 %}
+                                            <option value="{{ i }}" {% if itemForm.serviceQuantity.vars.value == i %}selected{% endif %}>{{ i }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </td>
+                                <td>{{ form_widget(itemForm.subtotal) }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-sm btn-danger remove-item">Remove</button>
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
@@ -60,21 +77,146 @@
                     {{ form_row(form.status) }}
                 </div>
 
-                <div class="actions-bottom mt-2">
-                    <button type="button" class="btn btn-primary" id="add-order-item">+ Add Item</button>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-success" id="add-order-item">+ Add Item</button>
                 </div>
             </div>
         </div>
 
         <div class="actions-bottom mt-4">
-            <a href="{{ path('app_order_index') }}" class="btn btn-secondary"> Back to List</a>
-            <button type="submit" id="save-order" class="btn btn-primary"> Save Order</button>
+            <a href="{{ path('app_order_index') }}" class="btn btn-secondary">Back to List</a>
+            <button type="submit" id="save-order" class="btn btn-primary">💾 Save Order</button>
         </div>
     {{ form_end(form) }}
+
 </section>
 {% endblock %}
 
 {% block javascripts %}
-    {{ parent() }}
-    {{ encore_entry_script_tags('ordersform') }}
+{{ parent() }}
+{{ encore_entry_script_tags('ordernew') }}
+
+<script>
+function buildQuantityDropdown(name, selectedValue) {
+    const select = document.createElement('select');
+    select.className = 'form-select qty-dropdown';
+    select.name = name;
+    for (let i = 1; i <= 10; i++) {
+        const opt = document.createElement('option');
+        opt.value = i;
+        opt.textContent = i;
+        if (parseInt(selectedValue) === i) opt.selected = true;
+        select.appendChild(opt);
+    }
+    return select;
+}
+
+function buildRowFromPrototype(html) {
+    const tmp = document.createElement('div');
+    tmp.innerHTML = html.trim();
+    const row = document.createElement('tr');
+    row.className = 'order-item-row';
+
+    const cell = (el) => {
+        const td = document.createElement('td');
+        if (el) td.appendChild(el);
+        return td;
+    };
+
+    const productEl = tmp.querySelector('[name$="[product]"]')?.cloneNode(true);
+    const productQtyName = tmp.querySelector('[name$="[productQuantity]"]')?.getAttribute('name');
+    const serviceEl = tmp.querySelector('[name$="[service]"]')?.cloneNode(true);
+    const serviceQtyName = tmp.querySelector('[name$="[serviceQuantity]"]')?.getAttribute('name');
+    const subtotalEl = tmp.querySelector('[name$="[subtotal]"]')?.cloneNode(true);
+
+    const productQtyDropdown = buildQuantityDropdown(productQtyName, 1);
+    const serviceQtyDropdown = buildQuantityDropdown(serviceQtyName, 1);
+
+    row.appendChild(cell(productEl));
+    row.appendChild(cell(productQtyDropdown));
+    row.appendChild(cell(serviceEl));
+    row.appendChild(cell(serviceQtyDropdown));
+    row.appendChild(cell(subtotalEl));
+
+    const removeTd = cell();
+    removeTd.innerHTML = '<button type="button" class="btn btn-sm btn-danger remove-item">Remove</button>';
+    row.appendChild(removeTd);
+
+    return row;
+}
+
+function wireRowBehavior(row) {
+    const productSel = row.querySelector('[name$="[product]"]');
+    const productQty = row.querySelector('[name$="[productQuantity]"]');
+    const serviceSel = row.querySelector('[name$="[service]"]');
+    const serviceQty = row.querySelector('[name$="[serviceQuantity]"]');
+    const subtotalInput = row.querySelector('[name$="[subtotal]"]');
+
+    const updateSubtotal = () => {
+        let total = 0;
+        const getPrice = (sel) => {
+            if (!sel || !sel.value) return 0;
+            const opt = sel.options[sel.selectedIndex];
+            return parseFloat(opt?.dataset?.price || 0);
+        };
+        const pPrice = getPrice(productSel) * (parseInt(productQty.value || 0));
+        const sPrice = getPrice(serviceSel) * (parseInt(serviceQty.value || 0));
+        total = pPrice + sPrice;
+        if (subtotalInput) subtotalInput.value = total.toFixed(2);
+        updateClientTotal();
+    };
+
+    [productSel, productQty, serviceSel, serviceQty].forEach(el => {
+        if (el) el.addEventListener('change', updateSubtotal);
+    });
+}
+
+function updateClientTotal() {
+    let total = 0;
+    document.querySelectorAll('tr.order-item-row').forEach(row => {
+        const subtotal = row.querySelector('[name$="[subtotal]"]');
+        total += subtotal && subtotal.value ? parseFloat(subtotal.value) : 0;
+    });
+    const totalInput = document.querySelector('[name$="[totalPrice]"]');
+    if (totalInput) totalInput.value = total.toFixed(2);
+}
+
+function setupOrderItems() {
+    const tbody = document.getElementById('order-items-body');
+    if (!tbody) return;
+    const proto = tbody.dataset.prototype;
+    let index = parseInt(tbody.dataset.index || 0);
+
+    tbody.querySelectorAll('tr.order-item-row').forEach(wireRowBehavior);
+
+    if (tbody.querySelectorAll('tr.order-item-row').length === 0 && proto) {
+        const html = proto.replace(/__name__/g, index);
+        index++;
+        tbody.dataset.index = String(index);
+        const row = buildRowFromPrototype(html);
+        tbody.appendChild(row);
+        wireRowBehavior(row);
+    }
+
+    document.getElementById('add-order-item')?.addEventListener('click', () => {
+        if (!proto) return;
+        const html = proto.replace(/__name__/g, index);
+        index++;
+        tbody.dataset.index = String(index);
+        const row = buildRowFromPrototype(html);
+        tbody.appendChild(row);
+        wireRowBehavior(row);
+    });
+
+    tbody.addEventListener('click', (e) => {
+        if (e.target.classList.contains('remove-item')) {
+            const row = e.target.closest('tr.order-item-row');
+            if (row) row.remove();
+            updateClientTotal();
+        }
+    });
+}
+
+document.addEventListener('DOMContentLoaded', setupOrderItems);
+</script>
 {% endblock %}

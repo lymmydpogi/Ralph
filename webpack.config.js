@@ -24,9 +24,10 @@ Encore
     .addEntry('servicenew', './assets/scripts/servicenew.js') // Imports servicenew.css inside
     .addEntry('productindex', './assets/scripts/productindex.js') // Products list page
     .addEntry('home', './assets/styles/home.css')
+   
 
     // ✅ New entry for New Order page
-    .addEntry('ordersform', './assets/scripts/ordernew.js')   // Imports ordersform.css inside
+    .addEntry('ordernew', './assets/scripts/ordernew.js')   // Imports ordersform.css inside
 
     // Page-independent CSS
     .addStyleEntry('form', './assets/styles/form.css')

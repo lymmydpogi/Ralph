@@ -6,8 +6,6 @@ use App\Repository\OrderRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\Users;
-use App\Entity\OrderItem;
 
 #[ORM\Entity(repositoryClass: OrderRepository::class)]
 #[ORM\Table(name: 'orders')]
@@ -15,24 +13,25 @@ class Orders
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(type: "integer")]
+    #[ORM\Column(type: 'integer')]
     private ?int $id = null;
 
-    // Customer relation
-    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: "orders")]
+    // ✅ Customer linked to Users entity
+    #[ORM\ManyToOne(targetEntity: Users::class, inversedBy: 'orders')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Users $customer = null;
 
-    #[ORM\Column(type: "datetime")]
+    #[ORM\Column(type: 'datetime')]
     private ?\DateTimeInterface $orderDate = null;
 
-    #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
-    private ?string $totalPrice = null;
+    #[ORM\Column(type: 'decimal', precision: 10, scale: 2)]
+    private ?string $totalPrice = '0.00';
 
     #[ORM\Column(length: 50)]
-    private ?string $status = 'pending'; // pending, completed, canceled
+    private ?string $status = 'pending'; // pending | completed | canceled
 
-    #[ORM\OneToMany(mappedBy: "order", targetEntity: OrderItem::class, cascade: ["persist", "remove"], orphanRemoval: true)]
+    // ✅ Linked to OrderItem, cascade persist + orphan removal
+    #[ORM\OneToMany(mappedBy: 'order', targetEntity: OrderItem::class, cascade: ['persist', 'remove'], orphanRemoval: true)]
     private Collection $orderItems;
 
     public function __construct()
@@ -41,9 +40,9 @@ class Orders
         $this->orderDate = new \DateTime();
     }
 
-    // ----------------------
+    // -------------------------
     // Getters & Setters
-    // ----------------------
+    // -------------------------
 
     public function getId(): ?int
     {
@@ -79,7 +78,7 @@ class Orders
 
     public function setTotalPrice(string $totalPrice): self
     {
-        $this->totalPrice = $totalPrice;
+        $this->totalPrice = number_format((float)$totalPrice, 2, '.', '');
         return $this;
     }
 
@@ -107,8 +106,8 @@ class Orders
         if (!$this->orderItems->contains($item)) {
             $this->orderItems->add($item);
             $item->setOrder($this);
-            $this->recalculateTotal();
         }
+        $this->recalculateTotal();
         return $this;
     }
 
@@ -118,21 +117,33 @@ class Orders
             if ($item->getOrder() === $this) {
                 $item->setOrder(null);
             }
-            $this->recalculateTotal();
         }
+        $this->recalculateTotal();
         return $this;
     }
 
     /**
-     * Recalculate totalPrice based on order items
+     * ✅ Recalculate totalPrice based on order items
      */
     public function recalculateTotal(): self
     {
         $total = 0.0;
         foreach ($this->orderItems as $item) {
-            $total += $item->getSubtotal();
+            $subtotal = (float)$item->getSubtotal();
+            $total += $subtotal;
         }
         $this->totalPrice = number_format($total, 2, '.', '');
+        return $this;
+    }
+
+    /**
+     * ✅ Utility: Clear all order items (optional helper)
+     */
+    public function clearOrderItems(): self
+    {
+        foreach ($this->orderItems as $item) {
+            $this->removeOrderItem($item);
+        }
         return $this;
     }
 }

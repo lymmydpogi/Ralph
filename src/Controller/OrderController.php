@@ -24,36 +24,37 @@ final class OrderController extends AbstractController
         ]);
     }
 
+    /**
+     * Normalize and clean up order items before saving
+     */
     private function normalizeOrderItems(Orders $order): void
     {
-        // Remove empty rows and fill name/price from chosen entity
-        // Use a copy since we'll possibly add new items during iteration
-        $existing = iterator_to_array($order->getOrderItems());
-        foreach ($existing as $item) {
+        $existingItems = iterator_to_array($order->getOrderItems());
+
+        foreach ($existingItems as $item) {
             $product = $item->getProduct();
             $service = $item->getService();
 
+            // Skip empty lines
             if (!$product && !$service) {
                 $order->removeOrderItem($item);
                 continue;
             }
 
-            // If both are selected in one row, split into two entries
+            // Handle both selected (split entry)
             if ($product && $service) {
-                // Current item becomes the product line
                 $item->setName($product->getName());
                 $item->setPrice($product->getPrice());
-                $item->setService(null);
                 $item->setType('product');
+                $item->setService(null);
 
-                // Create a new item for the service line
                 $serviceItem = new OrderItem();
                 $serviceItem->setOrder($order);
                 $serviceItem->setService($service);
-                $serviceItem->setProduct(null);
                 $serviceItem->setName($service->getName());
                 $serviceItem->setPrice($service->getPrice());
                 $serviceItem->setQuantity($item->getQuantity());
+                $serviceItem->setType('service');
                 $order->addOrderItem($serviceItem);
             } elseif ($product) {
                 $item->setName($product->getName());
@@ -65,23 +66,34 @@ final class OrderController extends AbstractController
                 $item->setType('service');
             }
 
+            // Default quantity safeguard
             if ($item->getQuantity() <= 0) {
                 $item->setQuantity(1);
             }
         }
 
-        $order->recalculateTotal();
+        // Update total
+        if (method_exists($order, 'recalculateTotal')) {
+            $order->recalculateTotal();
+        }
     }
 
+    /**
+     * Persist order with items
+     */
     private function saveOrder(Orders $order, EntityManagerInterface $em): void
     {
-        // Ensure order items are valid and totals computed
         $this->normalizeOrderItems($order);
 
-        // Persist if new, otherwise just flush
         if ($order->getId() === null) {
             $em->persist($order);
         }
+
+        // Make sure each item references its order
+        foreach ($order->getOrderItems() as $item) {
+            $item->setOrder($order);
+        }
+
         $em->flush();
     }
 
@@ -97,15 +109,14 @@ final class OrderController extends AbstractController
     #[Route('/new', name: 'app_order_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $em): Response
     {
-        $order = new Orders(); // match entity
-        $form = $this->createForm(OrdersType::class, $order); // match form type
+        $order = new Orders();
+        $form = $this->createForm(OrdersType::class, $order);
         $form->handleRequest($request);
 
         if ($form->isSubmitted()) {
-            // Normalize early so collection reflects actual intent
             $this->normalizeOrderItems($order);
 
-            // Basic validations
+            // Validate required fields
             if ($order->getCustomer() === null) {
                 $form->get('customer')->addError(new FormError('Please select a customer.'));
             }
@@ -116,7 +127,6 @@ final class OrderController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             $this->saveOrder($order, $em);
-
             $this->addFlash('success', 'Order created successfully!');
             return $this->redirectToRoute('app_order_index');
         }
@@ -143,6 +153,7 @@ final class OrderController extends AbstractController
 
         if ($form->isSubmitted()) {
             $this->normalizeOrderItems($order);
+
             if ($order->getCustomer() === null) {
                 $form->get('customer')->addError(new FormError('Please select a customer.'));
             }
@@ -168,7 +179,7 @@ final class OrderController extends AbstractController
     #[Route('/{id}/delete', name: 'app_order_delete', methods: ['POST'])]
     public function delete(Request $request, Orders $order, EntityManagerInterface $em): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$order->getId(), $request->request->get('_token'))) {
+        if ($this->isCsrfTokenValid('delete' . $order->getId(), $request->request->get('_token'))) {
             $em->remove($order);
             $em->flush();
             $this->addFlash('success', 'Order deleted successfully!');

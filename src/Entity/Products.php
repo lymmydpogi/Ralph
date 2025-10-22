@@ -1,4 +1,4 @@
-1. Form is not being submitted properly<?php
+<?php
 
 namespace App\Entity;
 
