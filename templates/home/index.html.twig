@@ -2,268 +2,87 @@
 
 {% block title %}Dashboard - Shoes Admin{% endblock %}
 
-{% block page_title %}Dashboard Overview{% endblock %}
+{% block stylesheets %}
+    {{ parent() }}
+    {{ encore_entry_link_tags('home') }}
+{% endblock %}
+
+{% block page_title %}
+    Dashboard Overview
+{% endblock %}
 
 {% block content %}
-<style>
-  /* Status Cards */
-  .dashboard-cards {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 24px;
-    margin-bottom: 40px;
-  }
-
-  .card {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 28px;
-    box-shadow: 0 2px 12px var(--shadow);
-    border: 1px solid rgba(139, 111, 71, 0.1);
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 4px;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    opacity: 0;
-    transition: opacity 0.3s ease;
-  }
-
-  .card:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 24px var(--shadow);
-  }
-
-  .card:hover::before {
-    opacity: 1;
-  }
-
-  .card h3 {
-    color: var(--text-light);
-    font-size: 14px;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    margin-bottom: 12px;
-  }
-
-  .card p {
-    font-size: 32px;
-    font-weight: 700;
-    color: var(--primary);
-    margin-bottom: 8px;
-  }
-
-  .progress-bar {
-    background: var(--bg-main);
-    border-radius: 12px;
-    height: 8px;
-    margin-top: 12px;
-    overflow: hidden;
-  }
-
-  .progress-fill {
-    height: 100%;
-    background: linear-gradient(90deg, var(--primary), var(--accent));
-    border-radius: 12px;
-    transition: width 0.5s ease;
-  }
-
-  /* Section */
-  .section {
-    background: var(--card-bg);
-    border-radius: 16px;
-    padding: 32px;
-    margin-bottom: 32px;
-    box-shadow: 0 2px 12px var(--shadow);
-    border: 1px solid rgba(139, 111, 71, 0.1);
-  }
-
-  .section h2 {
-    color: var(--primary);
-    font-size: 22px;
-    font-weight: 600;
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-    border-bottom: 2px solid var(--bg-main);
-  }
-
-  /* Table */
-  table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 8px;
-  }
-
-  thead tr {
-    background: var(--bg-main);
-  }
-
-  th {
-    padding: 16px;
-    text-align: left;
-    font-weight: 600;
-    color: var(--text-light);
-    font-size: 13px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-  }
-
-  tbody tr {
-    background: var(--bg-light);
-    transition: all 0.3s ease;
-  }
-
-  tbody tr:hover {
-    background: var(--bg-main);
-    transform: scale(1.01);
-    box-shadow: 0 2px 8px var(--shadow);
-  }
-
-  td {
-    padding: 16px;
-    color: var(--text-dark);
-    font-size: 14px;
-  }
-
-  .status {
-    display: inline-block;
-    padding: 6px 12px;
-    border-radius: 20px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-
-  .status-progress {
-    background: #FFF3E0;
-    color: var(--warning);
-  }
-
-  .status-completed {
-    background: #E8F5E9;
-    color: var(--success);
-  }
-
-  .status-pending {
-    background: #E3F2FD;
-    color: var(--info);
-  }
-
-  /* Activity Feed */
-  .activity-feed {
-    background: var(--bg-light);
-    padding: 20px;
-    border-radius: 12px;
-    max-height: 300px;
-    overflow-y: auto;
-  }
-
-  .activity-item {
-    padding: 16px;
-    margin-bottom: 12px;
-    background: var(--card-bg);
-    border-radius: 8px;
-    border-left: 3px solid var(--accent);
-    color: var(--text-dark);
-    font-size: 14px;
-    transition: all 0.3s ease;
-  }
-
-  .activity-item:hover {
-    transform: translateX(4px);
-    box-shadow: 0 2px 8px var(--shadow);
-  }
-
-  .activity-item:last-child {
-    margin-bottom: 0;
-  }
-</style>
-
-<!-- Status Cards -->
+<div class="container">
 <section class="dashboard-cards">
-  <div class="card">
-    <h3>Total Orders</h3>
-    <p>128</p>
-  </div>
-  <div class="card">
-    <h3>Active Repairs</h3>
-    <p>24</p>
-    <div class="progress-bar">
-      <div class="progress-fill" style="width: 60%;"></div>
+    <div class="card">
+        <h3>Total Orders</h3>
+        <p>128</p>
     </div>
-  </div>
-  <div class="card">
-    <h3>Products in Stock</h3>
-    <p>312</p>
-  </div>
-  <div class="card">
-    <h3>Revenue</h3>
-    <p>$12,430</p>
-  </div>
+    <div class="card">
+        <h3>Active Repairs</h3>
+        <p>24</p>
+        <div class="progress-bar">
+            <div class="progress-fill" style="width: 60%;"></div>
+        </div>
+    </div>
+    <div class="card">
+        <h3>Products in Stock</h3>
+        <p>312</p>
+    </div>
+    <div class="card">
+        <h3>Revenue</h3>
+        <p>$12,430</p>
+    </div>
 </section>
 
-<!-- Recent Orders Table -->
-<section class="section">
-  <h2>Recent Orders</h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Order ID</th>
-        <th>Customer</th>
-        <th>Status</th>
-        <th>Total</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td><strong>#00123</strong></td>
-        <td>John Doe</td>
-        <td><span class="status status-progress">In Progress</span></td>
-        <td><strong>$150</strong></td>
-      </tr>
-      <tr>
-        <td><strong>#00124</strong></td>
-        <td>Mary Jane</td>
-        <td><span class="status status-completed">Completed</span></td>
-        <td><strong>$230</strong></td>
-      </tr>
-      <tr>
-        <td><strong>#00125</strong></td>
-        <td>James Smith</td>
-        <td><span class="status status-pending">Pending</span></td>
-        <td><strong>$85</strong></td>
-      </tr>
-    </tbody>
-  </table>
+<section class="section recent-orders">
+    <h2>Recent Orders</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Customer</th>
+                <th>Status</th>
+                <th>Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>#00123</strong></td>
+                <td>John Doe</td>
+                <td><span class="status status-progress">In Progress</span></td>
+                <td><strong>$150</strong></td>
+            </tr>
+            <tr>
+                <td><strong>#00124</strong></td>
+                <td>Mary Jane</td>
+                <td><span class="status status-completed">Completed</span></td>
+                <td><strong>$230</strong></td>
+            </tr>
+            <tr>
+                <td><strong>#00125</strong></td>
+                <td>James Smith</td>
+                <td><span class="status status-pending">Pending</span></td>
+                <td><strong>$85</strong></td>
+            </tr>
+        </tbody>
+    </table>
 </section>
 
-<!-- Recent Activity Feed -->
-<section class="section">
-  <h2>Recent Activity</h2>
-  <div class="activity-feed">
-    <div class="activity-item">
-      Repair #00123 started for John Doe.
+<section class="section recent-activity">
+    <h2>Recent Activity</h2>
+    <div class="activity-feed">
+        <div class="activity-item">Repair #00123 started for John Doe.</div>
+        <div class="activity-item">Order #00124 has been shipped.</div>
+        <div class="activity-item">Revenue updated: $12,430.</div>
+        <div class="activity-item">New product added to inventory: Running Shoes.</div>
+        <div class="activity-item">Repair #00125 status changed to In Progress.</div>
     </div>
-    <div class="activity-item">
-      Order #00124 has been shipped.
-    </div>
-    <div class="activity-item">
-      Revenue updated: $12,430.
-    </div>
-    <div class="activity-item">
-      New product added to inventory: Running Shoes.
-    </div>
-    <div class="activity-item">
-      Repair #00125 status changed to In Progress.
-    </div>
-  </div>
 </section>
+</div>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {{ encore_entry_script_tags('home') }}
 {% endblock %}

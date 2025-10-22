@@ -22,7 +22,8 @@ Encore
     .addEntry('orderedit', './assets/scripts/orderedit.js')     // Imports orderedit.css inside
     .addEntry('serviceindex', './assets/scripts/serviceindex.js') // Imports serviceindex.css inside
     .addEntry('servicenew', './assets/scripts/servicenew.js') // Imports servicenew.css inside
-
+    .addEntry('productindex', './assets/scripts/productindex.js') // Products list page
+    .addEntry('home', './assets/styles/home.css')
 
     // ✅ New entry for New Order page
     .addEntry('ordersform', './assets/scripts/ordernew.js')   // Imports ordersform.css inside
@@ -56,6 +57,7 @@ Encore
 
     // PostCSS
     .enablePostCssLoader()
+
 
     // Uncomment if needed
     // .enableSassLoader()

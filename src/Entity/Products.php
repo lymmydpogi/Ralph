@@ -1,4 +1,4 @@
-<?php
+1. Form is not being submitted properly<?php
 
 namespace App\Entity;
 
@@ -22,6 +22,9 @@ class Products
 
     #[ORM\Column(type: "decimal", precision: 10, scale: 2)]
     private ?string $price = null;
+
+    #[ORM\Column(type: "text", nullable: true)]
+    private ?string $description = null;
 
     #[ORM\Column(type: "string", length: 100)]
     private ?string $category = null;
@@ -66,6 +69,17 @@ class Products
     public function setPrice(string $price): self
     {
         $this->price = $price;
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): self
+    {
+        $this->description = $description;
         return $this;
     }
 

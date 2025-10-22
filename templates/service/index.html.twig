@@ -9,13 +9,14 @@
 {% endblock %}
 
 {% block content %}
+<section class="section">
 <h2>Services</h2>
 
 <div class="actions">
     <a href="{{ path('app_service_new') }}" class="btn btn-primary">+ Add New Service</a>
 </div>
 
-<table id="servicesTable" class="display">
+<table id="servicesTable" class="table table-striped table-hover table-bordered display nowrap" style="width:100%">
     <thead>
         <tr>
             <th>Name</th>
@@ -45,10 +46,6 @@
                     </td>
                 </tr>
             {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6" style="text-align:center;">No services found</td>
-            </tr>
         {% endif %}
     </tbody>
 </table>
@@ -61,6 +58,7 @@
         + Add New Order
     </a>
 </div>
+</section>
 {% endblock %}
 
 {% block javascripts %}

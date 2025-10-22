@@ -3,28 +3,27 @@ version: "3.8"
 services:
   shoes_mysql:
     image: mysql:8.0
-    container_name: shoes_mysql_container
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: shoes_root
-      MYSQL_DATABASE: shoes_db
-      MYSQL_USER: shoes_user
-      MYSQL_PASSWORD: shoes_pass
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
-      - "3320:3306"
+      - "${MYSQL_PORT}:3306"
     volumes:
-      - shoes_mysql_data:/var/lib/mysql
+      - ${MYSQL_VOLUME}:/var/lib/mysql
 
   shoes_phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: shoes_phpmyadmin_container
+    container_name: ${PHPMYADMIN_CONTAINER_NAME}
     restart: unless-stopped
     environment:
-      PMA_HOST: shoes_mysql
-      PMA_USER: shoes_user
-      PMA_PASSWORD: shoes_pass
+      PMA_HOST: ${PMA_HOST}
+      PMA_USER: ${PMA_USER}
+      PMA_PASSWORD: ${PMA_PASSWORD}
     ports:
-      - "8082:80"
+      - "${PHPMYADMIN_PORT}:80"
     depends_on:
       - shoes_mysql
 

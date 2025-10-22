@@ -9,15 +9,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="form-container">
+<section class="section">
     <h2>Edit Service</h2>
-
     {{ include('service/_form.html.twig', {'button_label': 'Update'}) }}
-
-    <div class="actions">
-        <a href="{{ path('app_service_index') }}" class="btn btn-cancel">Cancel</a>
+    <div class="actions-bottom mt-4">
+        <a href="{{ path('app_service_index') }}" class="btn btn-secondary">Cancel</a>
     </div>
-</div>
+</section>
 {% endblock %}
 
 {% block javascripts %}

@@ -1,35 +1,27 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Add New Service{% endblock %}
-
-{% block stylesheets %}
-    {{ encore_entry_link_tags('servicenew') }}
-{% endblock %}
+{% block title %}Add New Product{% endblock %}
 
 {% block content %}
 <section class="section">
-    <h2>Add New Service</h2>
+    <h2>Add New Product</h2>
 
-    {{ form_start(form, { attr: { id: 'service_form' } }) }}
+    {{ form_start(form, { attr: { id: 'product_form' } }) }}
         <div class="grid grid-2 gap-lg">
             <div class="p-3 panel">
                 {{ form_row(form.name) }}
                 {{ form_row(form.description) }}
+                {{ form_row(form.price) }}
             </div>
             <div class="p-3 panel">
-                {{ form_row(form.price) }}
                 {{ form_row(form.category) }}
                 {{ form_row(form.isActive) }}
             </div>
         </div>
         <div class="actions-bottom mt-4">
-            <a href="{{ path('app_service_index') }}" class="btn btn-secondary">Cancel</a>
-            <button type="submit" class="btn btn-primary">Save Service</button>
+            <a href="{{ path('app_product_index') }}" class="btn btn-secondary">Cancel</a>
+            <button type="submit" class="btn btn-primary">Save Product</button>
         </div>
     {{ form_end(form) }}
 </section>
-{% endblock %}
-
-{% block javascripts %}
-    {{ encore_entry_script_tags('servicenew') }}
 {% endblock %}

@@ -1,72 +1,62 @@
-{% extends 'base.html.twig' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shoes Admin{% endblock %}</title>
 
-{% block title %}Customers{% endblock %}
+    {# Default global styles from Webpack Encore #}
+    {{ encore_entry_link_tags('app') }}
 
-{% block stylesheets %}
-    {{ parent() }}
-    {# Include compiled CSS via Webpack Encore #}
-    {{ encore_entry_link_tags('usersindex') }}
-{% endblock %}
+    {# Page-specific stylesheets (like dashboard.css, home.css, etc.) #}
+    {% block stylesheets %}{% endblock %}
+</head>
 
-{% block content %}
-<h2>Customers</h2>
+<body>
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h1>Shoes Admin</h1>
+            <p>Management Panel</p>
+        </div>
 
-<div class="actions">
-    <a href="{{ path('user_new') }}" class="btn btn-primary">+ Add New Customer</a>
-</div>
+        <nav class="sidebar-nav">
+            <a href="{{ path('app_home') }}" class="{% if app.request.get('_route') == 'app_home' %}active{% endif %}">🏠 Dashboard</a>
+            <a href="{{ path('user_index') }}" class="{% if app.request.get('_route') starts with 'user_' %}active{% endif %}">👥 Customers</a>
+            <a href="{{ path('app_order_index') }}" class="{% if app.request.get('_route') starts with 'app_order_' %}active{% endif %}">🧾 Orders</a>
+            <a href="{{ path('app_service_index') }}" class="{% if app.request.get('_route') starts with 'app_service_' %}active{% endif %}">🛠️ Services</a>
+            <a href="{{ path('app_product_index') }}" class="{% if app.request.get('_route') starts with 'app_product_' %}active{% endif %}">👟 Products</a>
+        </nav>
+    </div>
 
-<table id="customersTable" class="display">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Email</th>
-            <th>Name</th>
-            <th>Roles</th>
-            <th>Created At</th>
-            <th>Actions</th>
-        </tr>
-    </thead>
-    <tbody>
-        {% if users is not empty %}
-            {% for user in users %}
-                {% if 'ROLE_CLIENT' in user.roles %}
-                    <tr>
-                        <td>{{ user.id }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.name }}</td>
-                        <td>
-                            {% for role in user.roles %}
-                                <span class="badge bg-secondary">{{ role|replace({'ROLE_':''})|capitalize }}</span>
-                            {% endfor %}
-                        </td>
-                        <td>{{ user.createdAt ? user.createdAt|date('Y-m-d H:i') : '—' }}</td>
-                        <td>
-                            <a href="{{ path('user_show', {id: user.id}) }}" class="btn btn-view">View</a>
-                            <a href="{{ path('user_edit', {id: user.id}) }}" class="btn btn-edit">Edit</a>
-                            <form action="{{ path('user_delete', {id: user.id}) }}" method="POST" class="inline-form" onsubmit="return confirm('Are you sure?');">
-                                <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
-                                <button type="submit" class="btn btn-delete">Delete</button>
-                            </form>
-                        </td>
-                    </tr>
-                {% endif %}
-            {% endfor %}
-        {% else %}
-            <tr>
-                <td colspan="6" style="text-align:center;">No customers found</td>
-            </tr>
-        {% endif %}
-    </tbody>
-</table>
+    <div class="main">
+        <header class="navbar">
+            <h2>{% block page_title %}Dashboard{% endblock %}</h2>
+            <div class="navbar-actions">
+                <div class="user-profile">
+                    <div class="user-avatar">{{ app.user ? app.user.name|first|upper : 'A' }}</div>
+                    <span>{{ app.user ? app.user.name : 'Admin' }}</span>
+                </div>
+            </div>
+        </header>
 
-<div class="actions-bottom">
-    <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-secondary">&larr; Back</a>
-    <a href="{{ path('app_order_new') }}" class="btn btn-primary">+ Add New Order</a>
-</div>
-{% endblock %}
+        <main class="content">
+            <div class="container">
+                {% for label, messages in app.flashes %}
+                    {% for message in messages %}
+                        <div class="alert alert-{{ label }}" role="alert" style="margin-bottom:12px;">
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                {% endfor %}
+                {% block content %}{% endblock %}
+            </div>
+        </main>
+    </div>
 
-{% block javascripts %}
-    {{ parent() }}
-    {# Include compiled JS via Webpack Encore #}
-    {{ encore_entry_script_tags('usersindex') }}
-{% endblock %}
+    {# Default global JS bundle from Encore #}
+    {{ encore_entry_script_tags('app') }}
+
+    {# Page-specific JS (like home.js or usersindex.js) #}
+    {% block javascripts %}{% endblock %}
+</body>
+</html>

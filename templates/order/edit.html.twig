@@ -8,18 +8,33 @@
     {{ encore_entry_link_tags('orderedit') }}
 {% endblock %}
 
-{% block body %}
-    <h1>Edit Order</h1>
+{% block content %}
+<section class="section">
+    <h2>Edit Order</h2>
 
-    {# Include the order form partial #}
-    {{ include('order/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ form_start(form, { attr: { id: 'order_form' } }) }}
+        <div class="grid grid-2 gap-lg">
+            <div class="p-3 panel">
+                <h3 class="mb-3">Customer</h3>
+                {{ form_row(form.customer) }}
+            </div>
 
-    <div class="actions">
-        <a href="{{ path('app_order_index') }}" class="btn btn-secondary">&larr; Back to list</a>
-    </div>
+            <div class="p-3 panel">
+                <h3 class="mb-3">Order Details</h3>
+                {{ form_row(form.orderDate) }}
+                {{ form_row(form.totalPrice) }}
+                {{ form_row(form.status) }}
+            </div>
+        </div>
 
-    {# Include the delete form partial #}
+        <div class="actions-bottom mt-4">
+            <a href="{{ path('app_order_index') }}" class="btn btn-secondary">&larr; Back to list</a>
+            <button type="submit" class="btn btn-primary">Update</button>
+        </div>
+    {{ form_end(form) }}
+
     {{ include('order/_delete_form.html.twig') }}
+</section>
 {% endblock %}
 
 {% block javascripts %}
