@@ -1,122 +1,126 @@
-/* Dashboard layout */
+/* ===========================
+   Dashboard Cards
+   =========================== */
 .dashboard-cards {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 24px;
+  margin-bottom: 40px;
 }
 
-.card {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+.dashboard-cards .card {
+  background: var(--card-bg);
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  box-shadow: 0 2px 8px var(--shadow);
+  padding: 24px;
+  text-align: center;
+  transition: transform 0.3s ease;
 }
 
-.card h3 {
-  margin: 0 0 8px;
-  font-size: 14px;
-  color: #6b7280;
-  font-weight: 600;
+.dashboard-cards .card:hover {
+  transform: translateY(-4px);
 }
 
-.card p {
-  margin: 0;
+.dashboard-cards h3 {
+  font-size: 16px;
+  color: var(--primary-dark);
+  margin-bottom: 12px;
+}
+
+.dashboard-cards p {
   font-size: 28px;
-  font-weight: 700;
-  color: #111827;
+  font-weight: 600;
+  color: var(--text-dark);
 }
 
+/* ===========================
+   Progress Bar
+   =========================== */
 .progress-bar {
-  margin-top: 10px;
-  width: 100%;
-  height: 8px;
-  background: #eef2f7;
-  border-radius: 999px;
+  background: #f0e6db;
+  border-radius: 6px;
+  height: 10px;
   overflow: hidden;
+  margin-top: 10px;
 }
 
 .progress-fill {
+  background: var(--accent);
   height: 100%;
-  background: linear-gradient(90deg, #60a5fa, #2563eb);
+  border-radius: 6px;
+  transition: width 0.4s ease;
 }
 
-/* Sections */
+/* ===========================
+   Sections
+   =========================== */
 .section {
-  background: #ffffff;
-  border: 1px solid #e5e7eb;
+  background: var(--card-bg);
   border-radius: 12px;
-  padding: 16px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
-  margin-bottom: 24px;
+  box-shadow: 0 2px 8px var(--shadow);
+  padding: 24px;
+  margin-bottom: 32px;
 }
 
 .section h2 {
-  margin: 0 0 12px;
-  font-size: 18px;
-  color: #111827;
+  font-size: 20px;
+  margin-bottom: 20px;
+  color: var(--primary-dark);
 }
 
-/* Recent orders table */
-.section.recent-orders table {
+/* ===========================
+   Orders Table
+   =========================== */
+table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.section.recent-orders thead th {
+th, td {
+  padding: 12px 16px;
   text-align: left;
-  padding: 12px 14px;
-  background: #f9fafb;
-  border-bottom: 1px solid #e5e7eb;
-  font-weight: 600;
+  border-bottom: 1px solid #ddd;
 }
 
-.section.recent-orders tbody td {
-  padding: 12px 14px;
-  border-bottom: 1px solid #f1f5f9;
+th {
+  background-color: var(--bg-light);
+  color: var(--primary-dark);
 }
 
-.section.recent-orders tbody tr:hover {
-  background: #fafbfd;
-}
-
-/* Status badges */
 .status {
-  display: inline-block;
   padding: 4px 10px;
+  border-radius: 6px;
   font-size: 12px;
-  border-radius: 999px;
   font-weight: 600;
+  color: white;
 }
-.status-progress { background: #fff7ed; color: #c2410c; border: 1px solid #fdba74; }
-.status-completed { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
-.status-pending { background: #eff6ff; color: #1d4ed8; border: 1px solid #93c5fd; }
 
-/* Activity feed */
+.status-progress {
+  background: var(--info);
+}
+
+.status-completed {
+  background: var(--success);
+}
+
+.status-pending {
+  background: var(--warning);
+}
+
+/* ===========================
+   Activity Feed
+   =========================== */
 .activity-feed {
-  display: grid;
-  gap: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .activity-item {
-  background: #f9fafb;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  padding: 10px 12px;
-  color: #374151;
+  background: var(--bg-light);
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: var(--text-dark);
+  box-shadow: 0 1px 4px rgba(0,0,0,0.05);
 }
-
-/* Responsive */
-@media (max-width: 1200px) {
-  .dashboard-cards { grid-template-columns: repeat(3, minmax(0, 1fr)); }
-}
-
-@media (max-width: 900px) {
-  .dashboard-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-
-@media (max-width: 600px) {
-  .dashboard-cards { grid-template-columns: 1fr; }
-}
-
