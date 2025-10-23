@@ -6,11 +6,13 @@ use App\Entity\Users;
 use App\Form\UsersType;
 use App\Repository\UsersRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\DBAL\Exception\UniqueConstraintViolationException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Form\FormError;
 
 
 
@@ -36,12 +38,15 @@ class UsersController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             // If this is a customer user, assign a role
             $user->setRoles(['ROLE_CLIENT']);
-
-            $em->persist($user);
-            $em->flush();
-
-            $this->addFlash('success', 'User (Customer) created successfully!');
-            return $this->redirectToRoute('user_index');
+            try {
+                $em->persist($user);
+                $em->flush();
+                $this->addFlash('success', 'User (Customer) created successfully!');
+                return $this->redirectToRoute('user_index');
+            } catch (UniqueConstraintViolationException $e) {
+                $form->get('email')->addError(new FormError('This email is already registered.'));
+                $this->addFlash('danger', 'Cannot create user: email already exists.');
+            }
         }
 
         return $this->render('users/new.html.twig', [
@@ -65,9 +70,14 @@ class UsersController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $em->flush();
-            $this->addFlash('success', 'User updated successfully!');
-            return $this->redirectToRoute('user_index');
+            try {
+                $em->flush();
+                $this->addFlash('success', 'User updated successfully!');
+                return $this->redirectToRoute('user_index');
+            } catch (UniqueConstraintViolationException $e) {
+                $form->get('email')->addError(new FormError('This email is already registered.'));
+                $this->addFlash('danger', 'Cannot update user: email already exists.');
+            }
         }
 
         return $this->render('users/edit.html.twig', [

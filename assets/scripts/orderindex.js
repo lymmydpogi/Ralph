@@ -1,9 +1,4 @@
 // -----------------------------------
-// Import page-specific CSS
-// -----------------------------------
-import '../styles/orderindex.css';
-
-// -----------------------------------
 // Import dependencies
 // -----------------------------------
 import $ from 'jquery';
@@ -11,6 +6,8 @@ import 'datatables.net-bs5';
 import 'datatables.net-responsive-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css';
+// Import page-specific CSS AFTER DataTables CSS to ensure overrides win
+import '../styles/orderindex.css';
 
 // -----------------------------------
 // Safe DataTable Initialization
@@ -42,7 +39,10 @@ function initOrdersTable() {
         responsive: true,
         autoWidth: false,
         columnDefs: [
-            { orderable: false, targets: 5 }
+            // Ensure last column (Actions) is never hidden and is not orderable
+            { orderable: false, targets: -1 },
+            { className: 'all', targets: -1 },
+            { responsivePriority: 1, targets: -1 },
         ],
         language: {
             search: "Search orders:",

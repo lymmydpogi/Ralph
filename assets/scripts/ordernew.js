@@ -1,3 +1,5 @@
+// Page-specific styles for Create New Order
+import '../styles/ordernew.css';
 // Build a new row from the Symfony prototype
 function buildRowFromPrototype(html) {
   const tmp = document.createElement('div');
@@ -15,20 +17,27 @@ function buildRowFromPrototype(html) {
   // Clone inputs to prevent removing from prototype
   const productEl = tmp.querySelector('[name$="[product]"]')?.cloneNode(true);
   const serviceEl = tmp.querySelector('[name$="[service]"]')?.cloneNode(true);
-  const nameEl = tmp.querySelector('[name$="[name]"]')?.cloneNode(true);
-  const priceEl = tmp.querySelector('[name$="[price]"]')?.cloneNode(true);
-  const qtyEl = tmp.querySelector('[name$="[quantity]"]')?.cloneNode(true);
+  const qtyEl = tmp.querySelector('[name$="[quantity]"]');
+
+  // Build quantity dropdown using the same name as the prototype quantity input
+  let qtySelect = null;
+  if (qtyEl) {
+    qtySelect = document.createElement('select');
+    qtySelect.className = 'form-select qty-dropdown';
+    qtySelect.name = qtyEl.getAttribute('name');
+    const current = parseInt(qtyEl.getAttribute('value') || '1', 10) || 1;
+    for (let i = 1; i <= 10; i++) {
+      const opt = document.createElement('option');
+      opt.value = String(i);
+      opt.textContent = String(i);
+      if (i === current) opt.selected = true;
+      qtySelect.appendChild(opt);
+    }
+  }
 
   if (productEl) row.appendChild(cell(productEl));
   if (serviceEl) row.appendChild(cell(serviceEl));
-
-  // Hidden cell for name, price, quantity
-  const hidden = document.createElement('td');
-  hidden.style.display = 'none';
-  if (nameEl) hidden.appendChild(nameEl);
-  if (priceEl) hidden.appendChild(priceEl);
-  if (qtyEl) hidden.appendChild(qtyEl);
-  row.appendChild(hidden);
+  if (qtySelect) row.appendChild(cell(qtySelect));
 
   // Remove button
   const removeTd = cell();
@@ -54,7 +63,7 @@ function wireRowBehavior(row) {
 
   if (productSel) productSel.addEventListener('change', () => { syncName(productSel); updateClientTotal(); });
   if (serviceSel) serviceSel.addEventListener('change', () => { syncName(serviceSel); updateClientTotal(); });
-  if (qtyInput) qtyInput.addEventListener('input', updateClientTotal);
+  if (qtyInput) qtyInput.addEventListener('change', updateClientTotal);
 }
 
 // Initialize Order Items

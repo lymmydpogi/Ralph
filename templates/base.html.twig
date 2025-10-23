@@ -6,7 +6,7 @@
     <title>{% block title %}Shoes Admin{% endblock %}</title>
 
     {# Default global styles from Webpack Encore #}
-    {{ encore_entry_link_tags('app') }}
+    {{ encore_entry_link_tags('dashboard') }}
 
     {# Page-specific stylesheets (like dashboard.css, home.css, etc.) #}
     {% block stylesheets %}{% endblock %}
@@ -15,6 +15,7 @@
 <body>
     <div class="sidebar">
         <div class="sidebar-header">
+        
             <h1>Shoes Admin</h1>
             <p>Management Panel</p>
         </div>
@@ -54,7 +55,7 @@
     </div>
 
     {# Default global JS bundle from Encore #}
-    {{ encore_entry_script_tags('app') }}
+    {{ encore_entry_script_tags('dashboard') }}
 
     {# Page-specific JS (like home.js or usersindex.js) #}
     {% block javascripts %}{% endblock %}

@@ -15,7 +15,7 @@
         <a href="{{ path('app_product_new') }}" class="btn btn-primary">+ Add New Product</a>
     </div>
 
-    <table id="productsTable" class="table table-striped table-hover table-bordered" style="width:100%">
+    <table id="productsTable" class="table table-striped table-hover table-bordered display nowrap" style="width:100%">
         <thead>
             <tr>
                 <th>Name</th>
@@ -49,6 +49,7 @@
 
     <div class="actions-bottom">
         <a href="{{ app.request.headers.get('referer') ?: path('app_home') }}" class="btn btn-secondary">&larr; Back</a>
+        <a href="{{ path('app_order_new') }}" class="btn btn-primary">+ Add New Order</a>
     </div>
 </section>
 {% endblock %}

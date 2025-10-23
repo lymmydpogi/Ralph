@@ -3,6 +3,7 @@ import 'datatables.net-bs5';
 import 'datatables.net-responsive-bs5';
 import 'datatables.net-bs5/css/dataTables.bootstrap5.min.css';
 import 'datatables.net-responsive-bs5/css/responsive.bootstrap5.min.css';
+import '../styles/productindex.css';
 
 function initProductsTable() {
   const $table = $('#productsTable');
@@ -18,14 +19,15 @@ function initProductsTable() {
     }
   }
 
-  $table.DataTable({
+  const dt = $table.DataTable({
     destroy: true,
     pageLength: 10,
     lengthChange: false,
     ordering: true,
+    pagingType: 'full_numbers',
+    dom: '<"dt-toolbar d-flex justify-content-between align-items-center"lf>t<"dt-footer d-flex justify-content-between align-items-center"ip>',
     responsive: { details: false }, // keep header/body aligned, no child rows
     autoWidth: false,
-    pagingType: 'simple_numbers',
     // Use default DataTables layout for consistent alignment
     // dom defaults to 'lfrtip' when lengthChange is true; since it's false, effectively 'frtip'
     columnDefs: [
@@ -39,11 +41,23 @@ function initProductsTable() {
       search: 'Search products:',
       info: 'Showing _START_ to _END_ of _TOTAL_ products',
       emptyTable: 'No products found',
-      paginate: { previous: 'Prev', next: 'Next' }
+      paginate: { first: 'First', previous: 'Prev', next: 'Next', last: 'Last' }
     }
   });
 
   $table.data('dt-initialized', true);
+
+  // Explicitly wire pagination to ensure all buttons work and scroll to top
+  const wirePagination = () => {
+    const api = dt;
+    const $wrapper = $table.closest('.dataTables_wrapper');
+    $wrapper.off('click.dt-pg');
+    $wrapper.on('click.dt-pg', '.paginate_button.first, .page-link[aria-label="First"]', (e) => { e.preventDefault(); api.page('first').draw('page'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    $wrapper.on('click.dt-pg', '.paginate_button.previous, .page-link[aria-label="Previous"]', (e) => { e.preventDefault(); api.page('previous').draw('page'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    $wrapper.on('click.dt-pg', '.paginate_button.next, .page-link[aria-label="Next"]', (e) => { e.preventDefault(); api.page('next').draw('page'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+    $wrapper.on('click.dt-pg', '.paginate_button.last, .page-link[aria-label="Last"]', (e) => { e.preventDefault(); api.page('last').draw('page'); window.scrollTo({ top: 0, behavior: 'smooth' }); });
+  };
+  wirePagination();
 }
 
 function wireRowActions() {
